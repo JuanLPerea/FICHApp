@@ -277,7 +277,7 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
                     nuevoFichaje.setMensaje(mensajeET.getText().toString());
                 }
 
-                DB.fichar.nuevo(git nuevoFichaje);
+                DB.fichar.nuevo(nuevoFichaje);
                 break;
             case 2:
                 // Actualizar el fichaje que existía, añadiendo el campo de salida y lo guardamos en la BB.DD
@@ -294,8 +294,6 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
 
 
         }
-
-
 
 
     }
