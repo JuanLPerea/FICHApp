@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">FichApp</string>
+
+
+    <string-array
+        name="mensajes_array">
+        <item>(Opcional) Observaciones</item>
+        <item>Comida</item>
+        <item>Descanso</item>
+        <item>Salida Cliente</item>
+        <item>Médico</item>
+        <item>Retraso Transporte</item>
+        <item>Otros</item>
+
+    </string-array>
+
+
 </resources>
