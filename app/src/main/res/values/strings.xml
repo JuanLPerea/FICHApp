@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FichApp</string>
 
-
+<!--tipo de mensaje -->
     <string-array
         name="mensajes_array">
         <item>(Opcional) Observaciones</item>
