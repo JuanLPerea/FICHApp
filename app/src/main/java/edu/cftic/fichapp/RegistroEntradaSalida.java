@@ -55,40 +55,8 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro_entrada_salida);
 
-        String[] mensajes_tipo = getResources().getStringArray(R.array.mensajes_array);
-
-        spinner = findViewById(R.id.spinner);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mensajes_tipo);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerArrayAdapter);
-        spinner.setOnItemSelectedListener(this);
-
-
-        // Ocultar teclado Virtual
-        hideKeyboard(this);
-
-
-        horaEntrada = findViewById(R.id.horaEntrada);
-        horaSalida = findViewById(R.id.horaSalida);
-
-        botonEntrada = findViewById(R.id.ficharentradaBTN);
-        botonSalida = findViewById(R.id.ficharsalidaBTN);
-
-        textoCronoFichaje = findViewById(R.id.cronoFichaje);
-        mensajeCheck = findViewById(R.id.checkmensaje);
-        mensajeET = findViewById(R.id.mensajeET);
-
-        tituloTV = findViewById(R.id.tituloTV);
-
-        tituloTV.requestFocus();
-
-
-        // Utilizamos un boolean para saber si ha fichado o no. Cuando entra en esta Actividad, de primeras es false hasta que pulse el botón de fichar
-        // También desactivamos el EditText del mensaje y el check para incluir un mensaje hasta que hayamos fichado
-        haFichado = false;
-        mensajeET.setEnabled(false);
-        mensajeCheck.setEnabled(false);
-
+        // Inicializar vistas y variables
+        inicializarVistas();
 
         // Instanciamos la BB.DD.
         bdd = new DB(this);
@@ -121,11 +89,6 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
         Log.d("MIAPP", "Entrada: " + ultimoFichaje.getFechainicio());
         Log.d("MIAPP", "Salida: " + ultimoFichaje.getFechafin());
 
-        // Si no existe ultimo fichaje (La primera vez que ficha un nuevo empleado
-        // Tenemos que crear un ultimo fichaje vacío
-        if (ultimoFichaje == null) {
-
-        }
 
 
         // Establecemos el tipo de fichaje si es de salida o de entrada
@@ -198,7 +161,6 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
 
                 // El último fichaje fue de salida
                 // Fichaje nuevo
-
                 horaEntrada.setVisibility(View.VISIBLE);
                 botonSalida.setEnabled(false);
                 botonEntrada.setEnabled(true);
@@ -209,13 +171,11 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
                 // El último fichaje fue Entrada
                 // Mostramos en pantalla la hora del fichaje de entrada y
                 // Habilitamos la salida (Botón)
-
-
                 String strDateFormat = "HH:mm dd-MMMM-YYYY"; // El formato de fecha está especificado
                 SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat); // La cadena de formato de fecha se pasa como un argumento al objeto
                 String ultimoFichajeFormateado = objSDF.format(ultimoFichaje.getFechainicio());
 
-
+                horaEntrada.setVisibility(View.VISIBLE);
                 horaEntrada.setText(ultimoFichajeFormateado);
                 botonSalida.setEnabled(true);
                 botonEntrada.setEnabled(false);
@@ -324,9 +284,15 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
             Log.i("APPK", "= " + es);
         }
         at = (ArrayList<Empleado>) DB.empleados.getEmpleados();
-/*
+
         Timestamp de = new Timestamp(new Date().getTime());
         Timestamp hasta = new Timestamp(new Date().getTime());
+
+/*
+
+        ESTE EJEMPLO ESTÁ COMENTADO, PERO ES NECESARIO QUE EL USUARIO, LA PRIMERA VEZ QUE ENTRE EN LA
+        APLICACIÓN YA EXISTA EN LA BASE DE DATOS UN REGISTRO DE FICHAJE SIN DATOS EN LA ENTRADA Y SALIDA
+        PARA QUE AL RECUPERAR EL ÚLTIMO FICHAJE, NO DE ERROR.
 
         Fichaje fe = new Fichaje(tr, de, hasta, "Mensaje");
         Log.i("APPK", "F: " + fe);
@@ -352,5 +318,43 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
         Fichaje ul = DB.fichar.getFichajeUltimo(tr.getId_empleado());
         ultimoFichaje = ul;
         Log.i("APPK", "" + ul.toString());
+    }
+
+    private void inicializarVistas () {
+        String[] mensajes_tipo = getResources().getStringArray(R.array.mensajes_array);
+
+        spinner = findViewById(R.id.spinner);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mensajes_tipo);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerArrayAdapter);
+        spinner.setOnItemSelectedListener(this);
+
+
+        // Ocultar teclado Virtual
+        hideKeyboard(this);
+
+
+        horaEntrada = findViewById(R.id.horaEntrada);
+        horaSalida = findViewById(R.id.horaSalida);
+
+        botonEntrada = findViewById(R.id.ficharentradaBTN);
+        botonSalida = findViewById(R.id.ficharsalidaBTN);
+
+        textoCronoFichaje = findViewById(R.id.cronoFichaje);
+        mensajeCheck = findViewById(R.id.checkmensaje);
+        mensajeET = findViewById(R.id.mensajeET);
+
+        tituloTV = findViewById(R.id.tituloTV);
+
+        tituloTV.requestFocus();
+
+
+        // Utilizamos un boolean para saber si ha fichado o no. Cuando entra en esta Actividad, de primeras es false hasta que pulse el botón de fichar
+        // También desactivamos el EditText del mensaje y el check para incluir un mensaje hasta que hayamos fichado
+        haFichado = false;
+        mensajeET.setEnabled(false);
+        mensajeCheck.setEnabled(false);
+
+
     }
 }
