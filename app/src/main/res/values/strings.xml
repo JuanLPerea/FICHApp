@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">FichApp</string>
+    <string name="guardado">El fichaje ha quedado guardado</string>
 
-<!--tipo de mensaje -->
+    <!--tipo de mensaje -->
     <string-array
         name="mensajes_array">
         <item>(Opcional) Observaciones</item>

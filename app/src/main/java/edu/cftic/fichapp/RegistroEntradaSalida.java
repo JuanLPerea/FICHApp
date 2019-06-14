@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.CountDownTimer;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -53,7 +56,11 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_registro_entrada_salida);
+
+
+
 
         // Inicializar vistas y variables
         inicializarVistas();
@@ -75,7 +82,7 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
             @Override
             public void onFinish() {
                 // Si acaba el cronometro y no ha fichado, volver a la pantalla de login
-                textoCronoFichaje.setText("Ha terminado el tiempo. ");
+                textoCronoFichaje.setText(R.string.guardado);
 
                // cronoFichaje.cancel();
                 salir(null);
@@ -105,6 +112,16 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
 
 
     }
+
+/*
+    @Override
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.mimenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+*/
 
     @Override
     protected void onResume() {
@@ -220,6 +237,12 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
     }
 
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        salir(null);
+        return super.onSupportNavigateUp();
+    }
+
     // Seleccionar texto en el Spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -260,18 +283,36 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
         }
 
         // Volvemos a la actividad de login
-        Intent intentSalida = new Intent(this, MainActivity.class);
-        startActivity(intentSalida);
+        Intent intent0 = new Intent(this, MainActivity.class);// vamos a menu y pasamos el empleado
+        //intent0.putExtra(Constantes.EMPLEADO, empleado);
+        startActivity(intent0);
 
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    salir(null);
+    }
+
     private void cargarDatosPrueba() {
+
+        /*
+
+        ESTE EJEMPLO ESTÁ COMENTADO, PERO ES NECESARIO QUE EL USUARIO, LA PRIMERA VEZ QUE ENTRE EN LA
+        APLICACIÓN YA EXISTA EN LA BASE DE DATOS UN REGISTRO DE FICHAJE SIN DATOS EN LA ENTRADA Y SALIDA
+        PARA QUE AL RECUPERAR EL ÚLTIMO FICHAJE, NO DE ERROR.
+*/
+
         Empresa em = new Empresa("B123456", "XYZYZ SA", "T T", "xyz@xyz.com");
         //boolean v = DB.empresaDao.nuevo(em);
         //Empleado nu = DB.empleados.getEmpleadoUsuarioClave("","");
 //        ArrayList<Empresa> ae = (ArrayList<Empresa>) DB.empresas.getEmpresas();
         //       em = DB.empresas.ultimo();
 
+
+
+        // Comentar esto (Es para pruebas) --------------------------------
         Log.i("APPK", "u: " + em);
 
         Empleado tr = new Empleado("JUAN YONG 2", "JYON3", "12345", "B", false, em);
@@ -288,11 +329,9 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
         Timestamp de = new Timestamp(new Date().getTime());
         Timestamp hasta = new Timestamp(new Date().getTime());
 
-/*
+        // Comentar o eliminar cuando esté implementado realmente en la APP
 
-        ESTE EJEMPLO ESTÁ COMENTADO, PERO ES NECESARIO QUE EL USUARIO, LA PRIMERA VEZ QUE ENTRE EN LA
-        APLICACIÓN YA EXISTA EN LA BASE DE DATOS UN REGISTRO DE FICHAJE SIN DATOS EN LA ENTRADA Y SALIDA
-        PARA QUE AL RECUPERAR EL ÚLTIMO FICHAJE, NO DE ERROR.
+/*
 
         Fichaje fe = new Fichaje(tr, de, hasta, "Mensaje");
         Log.i("APPK", "F: " + fe);
@@ -311,11 +350,12 @@ public class RegistroEntradaSalida extends AppCompatActivity implements AdapterV
 
         // RECUPERAR DATOS DEL USUARIO (A TRAVES DEL INTENT
         Intent intent = getIntent();
-        String idEmpleado = intent.getStringExtra("IDEMPLEADO");
+       // Empleado empleado = intent.getExtras(Constantes.EMPLEADO);            // Descomentar esta linea para recuperar del intent el empleado
 
 
         // Recuperar el último fichaje
-        Fichaje ul = DB.fichar.getFichajeUltimo(tr.getId_empleado());
+      //  Fichaje ul = DB.fichar.getFichajeUltimo(empleado.getId_empleado());     // Descomenta esta linea para que use el empleado recuperado del intent
+        Fichaje ul = DB.fichar.getFichajeUltimo(tr.getId_empleado());              // Comentar esta linea para el uso real en la APP
         ultimoFichaje = ul;
         Log.i("APPK", "" + ul.toString());
     }
